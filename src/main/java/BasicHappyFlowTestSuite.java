@@ -1,6 +1,8 @@
 import client.DummyClient;
 import client.IClient;
 import client.SocketClient;
+import client.TestHttpClient;
+
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Error;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
@@ -18,7 +20,7 @@ public class BasicHappyFlowTestSuite {
     public static void main(String[] args) {
 
         // Setup the Client here.
-        IClient client = new DummyClient();
+        IClient client = new TestHttpClient();
 
 //        IClient client = new SocketClient();
 
