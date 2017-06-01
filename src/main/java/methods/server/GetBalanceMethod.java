@@ -5,17 +5,16 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import models.BankAccount;
 import models.CustomerAccount;
-import models.PinCard;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
+import java.util.UUID;
 
-public class RevokeAccessMethod {
+public class GetBalanceMethod {
 
-    public static String parseRequest(JSONRPC2Request reqIn) {
 
+    public static String parseRequest(JSONRPC2Request reqIn){
+        boolean error = false;
 
         DummyServerDB db = DummyServerDB.getInstance();
         CustomerAccount customer = null;
@@ -43,36 +42,16 @@ public class RevokeAccessMethod {
             return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
         }
 
-        CustomerAccount customerLosingAccess = null;
-        for (CustomerAccount account : db.getCustomers()) {
-            if (account.getUsername().equals((String) reqIn.getNamedParams().get("username"))){
-                customerLosingAccess = account;
-            }
-        }
-
-        if(customerLosingAccess==null){
-            return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
-        }
-
-        // Remove PIN CARD
-        for (Iterator<PinCard> i = customerLosingAccess.getPinCards().iterator(); i.hasNext();) {
-            PinCard element = i.next();
-            if (element.getBankAccount().getiBAN().equals(bankAccount.getiBAN())) {
-                i.remove();
-            }
-        }
-
-        // remove access from BankAccount
-        bankAccount.getAccessReceivers().remove(customerLosingAccess);
+        // ToDo. Check if customer has access to bank account.
 
         // Construct response message.
         // The required named parameters to pass
         Map<String, Object> params = new HashMap<String, Object>();
-//        params.put("result", true);
+        params.put("balance", bankAccount.getBalance());
 
         JSONRPC2Response response = new JSONRPC2Response(params, reqIn.getID());
 
         return response.toString();
-
     }
+
 }

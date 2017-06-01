@@ -55,14 +55,29 @@ public class TransferMoneyMethod {
 
         // ToDo. Check if customer has access to bankAccount.
 
-        // Add to balance.
-        bankAccount.lowerBalance(((Double) reqIn.getNamedParams().get("amount")).floatValue());
-        bankAccount.increaseBalance(((Double) reqIn.getNamedParams().get("amount")).floatValue());
+        // TODo. Do both accounts have to exist? Maybe One is sufficient?
+
+        bankAccount.processTransfer(
+                (String) reqIn.getNamedParams().get("sourceIBAN"),
+                (String) reqIn.getNamedParams().get("targetIBAN"),
+                (String) reqIn.getNamedParams().get("targetName"),
+                ((Double) reqIn.getNamedParams().get("amount")).floatValue(),
+                (String) reqIn.getNamedParams().get("description")
+        );
+        bankAccount2.processTransfer(
+                (String) reqIn.getNamedParams().get("sourceIBAN"),
+                (String) reqIn.getNamedParams().get("targetIBAN"),
+                (String) reqIn.getNamedParams().get("targetName"),
+                ((Double) reqIn.getNamedParams().get("amount")).floatValue(),
+                (String) reqIn.getNamedParams().get("description")
+        );
+//        bankAccount.lowerBalance(((Double) reqIn.getNamedParams().get("amount")).floatValue());
+//        bankAccount.increaseBalance(((Double) reqIn.getNamedParams().get("amount")).floatValue());
 
         // Construct response message.
         // The required named parameters to pass
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("result", true);
+//        params.put("result", true);
 
         JSONRPC2Response response = new JSONRPC2Response(params, reqIn.getID());
 

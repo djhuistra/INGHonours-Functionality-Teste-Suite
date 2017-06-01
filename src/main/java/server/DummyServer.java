@@ -5,6 +5,15 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2ParseException;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import methods.server.*;
+import methods.server.CloseAccountMethod;
+import methods.server.DepositIntoAccountMethod;
+import methods.server.GetAuthTokenMethod;
+import methods.server.OpenAccountMethod;
+import methods.server.OpenAdditionalAccountMethod;
+import methods.server.PayFromAccountMethod;
+import methods.server.ProvideAccessMethod;
+import methods.server.RevokeAccessMethod;
+import methods.server.TransferMoneyMethod;
 
 public class DummyServer {
 
@@ -59,6 +68,22 @@ public class DummyServer {
             }
             case "getAuthToken": {
                 response = GetAuthTokenMethod.parseRequest(reqIn);
+                break;
+            }
+            case "getBalance": {
+                response = GetBalanceMethod.parseRequest(reqIn);
+                break;
+            }
+            case "getTransactionsOverview": {
+                response = GetTransactionsMethod.parseRequest(reqIn);
+                break;
+            }
+            case "getBankAccountAccess": {
+                response = GetBankAccountAccessMethod.parseRequest(reqIn);
+                break;
+            }
+            case "getUserAccess": {
+                response = GetUserAccessMethod.parseRequest(reqIn);
                 break;
             }
             default:{

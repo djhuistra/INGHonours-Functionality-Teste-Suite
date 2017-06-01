@@ -53,16 +53,19 @@ public class PayFromAccountMethod {
             return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
         }
 
+        // process the payment.
+        bankAccount.processCardPayment((String) reqIn.getNamedParams().get("sourceIBAN"),
+                (String) reqIn.getNamedParams().get("targetIBAN"),
+                ((Double) reqIn.getNamedParams().get("amount")).floatValue()
+                );
 
-        // Add to balance.
-        bankAccount.lowerBalance(((Double) reqIn.getNamedParams().get("amount")).floatValue());
 
             // TODO. Check where the money goes?
 
         // Construct response message.
         // The required named parameters to pass
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("result", true);
+//        params.put("result", true);
 
         JSONRPC2Response response = new JSONRPC2Response(params, reqIn.getID());
 

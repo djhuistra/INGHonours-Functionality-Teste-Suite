@@ -1,26 +1,40 @@
 import client.DummyClient;
 import client.IClient;
 import client.SocketClient;
-import client.TestHttpClient;
-
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Error;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import methods.client.*;
+import methods.client.CloseAccountMethod;
+import methods.client.DepositIntoAccountMethod;
+import methods.client.GetAuthTokenMethod;
+import methods.client.GetBalanceMethod;
+import methods.client.GetBankAccountAccessMethod;
+import methods.client.GetTransactionsMethod;
+import methods.client.GetUserAccessMethod;
+import methods.client.OpenAccountMethod;
+import methods.client.OpenAdditionalAccountMethod;
+import methods.client.PayFromAccountMethod;
+import methods.client.ProvideAccessMethod;
+import methods.client.RevokeAccessMethod;
+import methods.client.TransferMoneyMethod;
+import methods.server.*;
 import models.AccountCardTuple;
 import models.BankAccount;
 import models.CustomerAccount;
 import models.PinCard;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class BasicHappyFlowTestSuite {
 
     public static void main(String[] args) {
 
         // Setup the Client here.
-        IClient client = new TestHttpClient();
+        IClient client = new DummyClient();
 
 //        IClient client = new SocketClient();
 
@@ -137,6 +151,47 @@ public class BasicHappyFlowTestSuite {
             TransferMoneyMethod.parseResponse(parsedResponse);
         }
 
+        // ObtainBalance
+        System.out.println("-- Donald wants to obtain his balance. --");
+
+        request = GetBalanceMethod.createRequest(customer1, bankAccount1);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            GetBalanceMethod.parseResponse(parsedResponse);
+        }
+
+        // getTransactionOverview
+        System.out.println("-- Donald wants to get transaction overview --");
+
+        request = GetTransactionsMethod.createRequest(customer1, bankAccount1, 2);
+        response = client.processRequest(request);
+
+        List<Map<String, Object>> namedArrayResults = null;
+        if((namedArrayResults = checkArrayResponse(response)) != null){
+            GetTransactionsMethod.parseResponse(namedArrayResults);
+        }
+
+        // GetUserAccess
+        System.out.println("-- Donald wants to obtain his access. --");
+
+        request = GetUserAccessMethod.createRequest(customer1);
+        response = client.processRequest(request);
+
+        if((namedArrayResults = checkArrayResponse(response)) != null){
+            GetUserAccessMethod.parseResponse(namedArrayResults);
+        }
+
+
+        // GetBankAccountAccessMethod
+        System.out.println("-- Donald wants to get bank account access list --");
+
+        request = GetBankAccountAccessMethod.createRequest(customer1, bankAccount1);
+        response = client.processRequest(request);
+
+        if((namedArrayResults = checkArrayResponse(response)) != null){
+            GetBankAccountAccessMethod.parseResponse(namedArrayResults);
+        }
 
         ///------ TEAR DOWN TESTS.
         // RevokeAccessMethod
@@ -195,5 +250,35 @@ public class BasicHappyFlowTestSuite {
         }
 
         return namedResults;
+    }
+
+    public static List<Map<String, Object>> checkArrayResponse(JSONRPC2Response respIn){
+        List<Map<String, Object>> namedArrayResults = null;
+
+        // Check for success or error
+        if (!respIn.indicatesSuccess()) {
+
+            System.out.println("The request failed :");
+
+            JSONRPC2Error err = respIn.getError();
+
+            System.out.println("\terror.code    : " + err.getCode());
+            System.out.println("\terror.message : " + err.getMessage());
+            System.out.println("\terror.data    : " + err.getData());
+
+        }
+        else {
+            System.out.println("The request succeeded :");
+
+            System.out.println("\tresult : " + respIn.getResult());
+            System.out.println("\tid     : " + respIn.getID());
+
+             namedArrayResults
+                    = (List<Map<String, Object>>) respIn.getResult();
+
+
+        }
+
+        return namedArrayResults;
     }
 }

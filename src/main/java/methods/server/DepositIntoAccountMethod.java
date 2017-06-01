@@ -58,13 +58,16 @@ public class DepositIntoAccountMethod {
 
 
         // Add to balance.
-        bankAccount.increaseBalance(((Double) reqIn.getNamedParams().get("amount")).floatValue());
+        bankAccount.processDeposit(
+                (String) reqIn.getNamedParams().get("iBAN"),
+                ((Double) reqIn.getNamedParams().get("amount")).floatValue()
+        );
 
 
         // Construct response message.
         // The required named parameters to pass
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("result", true);
+//        params.put("result", true);
 
         JSONRPC2Response response = new JSONRPC2Response(params, reqIn.getID());
 

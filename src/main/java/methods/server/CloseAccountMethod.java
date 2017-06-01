@@ -58,7 +58,7 @@ public class CloseAccountMethod {
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("result", true);
+//        params.put("result", true);
 
         JSONRPC2Response response= new JSONRPC2Response(params, reqIn.getID());
 
