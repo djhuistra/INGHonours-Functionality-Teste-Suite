@@ -5,17 +5,18 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import models.BankAccount;
 import models.CustomerAccount;
-import models.PinCard;
+import models.Transaction;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
+import java.util.Set;
 
-public class RevokeAccessMethod {
+public class GetBankAccountAccessMethod {
 
-    public static String parseRequest(JSONRPC2Request reqIn) {
 
+    public static String parseRequest(JSONRPC2Request reqIn){
+        boolean error = false;
 
         DummyServerDB db = DummyServerDB.getInstance();
         CustomerAccount customer = null;
@@ -43,36 +44,33 @@ public class RevokeAccessMethod {
             return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
         }
 
-        CustomerAccount customerLosingAccess = null;
-        for (CustomerAccount account : db.getCustomers()) {
-            if (account.getUsername().equals((String) reqIn.getNamedParams().get("username"))){
-                customerLosingAccess = account;
-            }
-        }
+        // ToDo. Check if customer has access to bank account.
 
-        if(customerLosingAccess==null){
-            return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
-        }
+//        // Construct response message.
+//        // The required named parameters to pass
+//        Map<String, Object> params = new HashMap<String, Object>();
+//        params.put("balance", bankAccount.getBalance());
 
-        // Remove PIN CARD
-        for (Iterator<PinCard> i = customerLosingAccess.getPinCards().iterator(); i.hasNext();) {
-            PinCard element = i.next();
-            if (element.getBankAccount().getiBAN().equals(bankAccount.getiBAN())) {
-                i.remove();
-            }
-        }
+        Set<Map<String, Object>> paramArray = new HashSet<>();
+        int i = 0;
 
-        // remove access from BankAccount
-        bankAccount.getAccessReceivers().remove(customerLosingAccess);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("username", customer.getUsername());
+        paramArray.add(params);
 
         // Construct response message.
         // The required named parameters to pass
-        Map<String, Object> params = new HashMap<String, Object>();
-//        params.put("result", true);
+        for(CustomerAccount customerAccount : bankAccount.getAccessReceivers()){
+            Map<String, Object> params2 = new HashMap<String, Object>();
+            params2.put("username", customerAccount.getUsername());
 
-        JSONRPC2Response response = new JSONRPC2Response(params, reqIn.getID());
+            paramArray.add(params2);
+        }
+
+
+        JSONRPC2Response response = new JSONRPC2Response(paramArray, reqIn.getID());
 
         return response.toString();
-
     }
+
 }
