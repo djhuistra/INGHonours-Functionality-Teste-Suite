@@ -40,6 +40,8 @@ public class DepositIntoAccountMethod {
                     // TODO: Check if this customer has access to account.
                     customer  = account;
                     pinCard = card;
+
+                    //ToDo: Check if this users PINCARD is has the correct number.
                 }
             }
         }
@@ -52,7 +54,7 @@ public class DepositIntoAccountMethod {
 
 
         // Check if pincode is valid
-        if(pinCard.getPinCode() == ((Double) reqIn.getNamedParams().get("amount")).intValue()){
+        if(!pinCard.getPinCode().equals((reqIn.getNamedParams().get("pinCode")))){
             return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
         }
 

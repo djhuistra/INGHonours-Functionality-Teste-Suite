@@ -39,8 +39,8 @@ public class OpenAdditionalAccountMethod {
         customerAccount.addBankAccount(bankAccount);
 
         PinCard pinCard = new PinCard(bankAccount,
-                ((Long) namedResults.get("pinCard")).intValue(),
-                ((Long) namedResults.get("pinCode")).intValue()
+                ( namedResults.get("pinCard").toString()),
+                ( namedResults.get("pinCode").toString())
         );
         customerAccount.addPinCard(pinCard);
 

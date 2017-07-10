@@ -4,18 +4,18 @@ import java.util.Date;
 
 public class PinCard {
     private BankAccount bankAccount;
-    private int pinCardNumber;
-    private int pinCode;
+    private String pinCardNumber;
+    private String pinCode;
     private Date expirationDate;
 
     // Temporary method. While expirationDate is not part of the protocol.
-    public PinCard(BankAccount bankAccount, int pinCardNumber, int pinCode) {
+    public PinCard(BankAccount bankAccount, String pinCardNumber, String pinCode) {
         this.bankAccount = bankAccount;
         this.pinCardNumber = pinCardNumber;
         this.pinCode = pinCode;
     }
 
-    public PinCard(BankAccount bankAccount, int pinCardNumber, int pinCode, Date expirationDate) {
+    public PinCard(BankAccount bankAccount, String pinCardNumber, String pinCode, Date expirationDate) {
         this.bankAccount = bankAccount;
         this.pinCardNumber = pinCardNumber;
         this.pinCode = pinCode;
@@ -30,19 +30,19 @@ public class PinCard {
         this.bankAccount = bankAccount;
     }
 
-    public int getPinCardNumber() {
+    public String getPinCardNumber() {
         return pinCardNumber;
     }
 
-    public void setPinCardNumber(int pinCardNumber) {
+    public void setPinCardNumber(String pinCardNumber) {
         this.pinCardNumber = pinCardNumber;
     }
 
-    public int getPinCode() {
+    public String getPinCode() {
         return pinCode;
     }
 
-    public void setPinCode(int pinCode) {
+    public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
     }
 

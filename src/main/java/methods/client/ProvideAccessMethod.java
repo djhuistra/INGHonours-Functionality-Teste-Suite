@@ -35,8 +35,8 @@ public class ProvideAccessMethod {
     public static PinCard parseResponse(Map<String, Object> namedResults,  BankAccount bankAccount, CustomerAccount receivingCustomer){
 
         PinCard pinCard = new PinCard(bankAccount,
-                ((Long) namedResults.get("pinCard")).intValue(),
-                ((Long) namedResults.get("pinCode")).intValue()
+                ( namedResults.get("pinCard").toString()),
+                ( namedResults.get("pinCode").toString())
         );
         receivingCustomer.addPinCard(pinCard);
 

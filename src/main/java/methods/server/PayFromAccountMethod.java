@@ -36,7 +36,7 @@ public class PayFromAccountMethod {
         for (CustomerAccount account : db.getCustomers()) {
             for(PinCard card : account.getPinCards()){
                 if(card.getBankAccount().getiBAN().equals((String) reqIn.getNamedParams().get("sourceIBAN"))
-                        && card.getPinCardNumber() == ((Long) reqIn.getNamedParams().get("pinCard")).intValue()){
+                        && card.getPinCardNumber().equals((reqIn.getNamedParams().get("pinCard")))){
                     // TODO: Check if this customer has access to account.
                     customer  = account;
                     pinCard = card;
@@ -49,7 +49,7 @@ public class PayFromAccountMethod {
         }
 
         // Check if pincode is valid
-        if(pinCard.getPinCode() != ((Long) reqIn.getNamedParams().get("pinCode")).intValue()){
+        if(!pinCard.getPinCode().equals((reqIn.getNamedParams().get("pinCode")))){
             return new JSONRPC2Response(JSONRPC2Error.INVALID_REQUEST, reqIn.getID()).toString();
         }
 

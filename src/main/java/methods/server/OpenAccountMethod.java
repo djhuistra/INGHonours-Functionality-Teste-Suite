@@ -32,8 +32,8 @@ public class OpenAccountMethod {
         BankAccount bankAccount = new BankAccount(randomIBAN);
         customerAccount.addBankAccount(bankAccount);
 
-        int cardNumber = generator.nextInt(9999);
-        int pinCode  = generator.nextInt(9999);
+        String cardNumber = generator.nextInt(9999) +"";
+        String pinCode  = generator.nextInt(9999) + "";
 
         PinCard pinCard = new PinCard(bankAccount, cardNumber, pinCode);
         customerAccount.addPinCard(pinCard);
