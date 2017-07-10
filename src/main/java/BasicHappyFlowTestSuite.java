@@ -18,6 +18,7 @@ import methods.client.PayFromAccountMethod;
 import methods.client.ProvideAccessMethod;
 import methods.client.RevokeAccessMethod;
 import methods.client.TransferMoneyMethod;
+import methods.client.UnblockCardMethod;
 import methods.server.*;
 import models.AccountCardTuple;
 import models.BankAccount;
@@ -191,6 +192,60 @@ public class BasicHappyFlowTestSuite {
 
         if((namedArrayResults = checkArrayResponse(response)) != null){
             GetBankAccountAccessMethod.parseResponse(namedArrayResults);
+        }
+
+        // Extension 2. Test blocking and unblocking of PIN card.
+
+        //
+        System.out.println("-- 3x wrong pincode. Donald is screwed --");
+
+
+        String pinCode = card1.getPinCode();
+        card1.setPinCode(pinCode+"1");
+
+        // Attempt 1
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        client.processRequest(request);
+
+        // Attempt 2
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        client.processRequest(request);
+
+        // Attempt 3
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        client.processRequest(request);
+
+
+        System.out.println("-- 4th attmpt with correct Pin. Expect failure: --");
+        card1.setPinCode(pinCode);
+
+        // Attempt 4 - Should be blocked.
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            PayFromAccountMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- Unblock Card: --");
+
+        // Unblock card.
+        request = UnblockCardMethod.createRequest(customer1, bankAccount1, card1);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            UnblockCardMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- 5th attmpt. Should Work again: --");
+        card1.setPinCode(pinCode);
+
+        // Attempt 4 - Should be blocked.
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            PayFromAccountMethod.parseResponse(parsedResponse);
         }
 
         ///------ TEAR DOWN TESTS.

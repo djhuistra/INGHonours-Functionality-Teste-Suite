@@ -7,6 +7,8 @@ public class PinCard {
     private String pinCardNumber;
     private String pinCode;
     private Date expirationDate;
+    private int failedAttempts = 0;
+    private Boolean blocked = false;
 
     // Temporary method. While expirationDate is not part of the protocol.
     public PinCard(BankAccount bankAccount, String pinCardNumber, String pinCode) {
@@ -52,5 +54,22 @@ public class PinCard {
 
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public void setFailedAttempts(int failedAttempts) {
+        this.failedAttempts = failedAttempts;
+    }
+
+    public Boolean getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        this.blocked = blocked;
     }
 }

@@ -86,6 +86,10 @@ public class DummyServer {
                 response = GetUserAccessMethod.parseRequest(reqIn);
                 break;
             }
+            case "unblockCard": {
+                response = UnblockCardMethod.parseRequest(reqIn);
+                break;
+            }
             default:{
                 return new JSONRPC2Response(JSONRPC2Error.METHOD_NOT_FOUND, reqIn.getID()).toString();
             }
