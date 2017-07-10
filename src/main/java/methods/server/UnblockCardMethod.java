@@ -44,7 +44,7 @@ public class UnblockCardMethod {
         PinCard pinCard = null;
 
         for(PinCard card : customer.getPinCards()){
-            if(card.getBankAccount().getiBAN().equals(bankAccount.getiBAN())){
+            if(card.getPinCardNumber().equals((String) reqIn.getNamedParams().get("pinCard"))){
                 pinCard = card;
             }
         }
