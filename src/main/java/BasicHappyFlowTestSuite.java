@@ -12,6 +12,7 @@ import methods.client.GetBalanceMethod;
 import methods.client.GetBankAccountAccessMethod;
 import methods.client.GetTransactionsMethod;
 import methods.client.GetUserAccessMethod;
+import methods.client.InvalidateCardMethod;
 import methods.client.OpenAccountMethod;
 import methods.client.OpenAdditionalAccountMethod;
 import methods.client.PayFromAccountMethod;
@@ -240,13 +241,49 @@ public class BasicHappyFlowTestSuite {
         System.out.println("-- 5th attmpt. Should Work again: --");
         card1.setPinCode(pinCode);
 
-        // Attempt 4 - Should be blocked.
+        // Attempt 5 - Should work again.
         request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
         response = client.processRequest(request);
 
         if((parsedResponse = checkResponse(response)) != null){
             PayFromAccountMethod.parseResponse(parsedResponse);
         }
+
+
+        System.out.println("-- Extension 3 - Invalidate Card --");
+        // Extension 3 - Invalidate Card
+
+        String oldPinCard = card1.getPinCardNumber();
+
+        request = InvalidateCardMethod.createRequest(customer1, bankAccount1, card1, true);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            InvalidateCardMethod.parseResponse(parsedResponse, card1);
+        }
+
+        String  newPinCard = card1.getPinCardNumber();
+
+        System.out.println("-- Attempt to use old PinCard. Expect Failure --");
+        card1.setPinCardNumber(oldPinCard);
+
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            PayFromAccountMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- Attempt to use new PinCard. Should Work --");
+        card1.setPinCardNumber(newPinCard);
+
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            PayFromAccountMethod.parseResponse(parsedResponse);
+        }
+
 
         ///------ TEAR DOWN TESTS.
         // RevokeAccessMethod

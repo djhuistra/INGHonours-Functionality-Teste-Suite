@@ -90,6 +90,10 @@ public class DummyServer {
                 response = UnblockCardMethod.parseRequest(reqIn);
                 break;
             }
+            case "invalidateCard": {
+                response = InvalidateCardMethod.parseRequest(reqIn);
+                break;
+            }
             default:{
                 return new JSONRPC2Response(JSONRPC2Error.METHOD_NOT_FOUND, reqIn.getID()).toString();
             }
