@@ -18,7 +18,12 @@ public class SimulateTimeMethod {
 
         DummyServerDB db = DummyServerDB.getInstance();
 
-        int nrOfDays = ((Integer) reqIn.getNamedParams().get("amount")).intValue();
+        int nrOfDays = ((Long) reqIn.getNamedParams().get("nrOfDays")).intValue();
+
+
+        for(int i = 0; i< nrOfDays; i++){
+            db.addDay();
+        }
 
 
         Map<String, Object> params = new HashMap<String, Object>();

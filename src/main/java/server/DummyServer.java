@@ -4,16 +4,24 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Error;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2ParseException;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
+import methods.client.*;
 import methods.server.*;
 import methods.server.CloseAccountMethod;
 import methods.server.DepositIntoAccountMethod;
 import methods.server.GetAuthTokenMethod;
+import methods.server.GetBalanceMethod;
+import methods.server.GetBankAccountAccessMethod;
+import methods.server.GetTransactionsMethod;
+import methods.server.GetUserAccessMethod;
+import methods.server.InvalidateCardMethod;
 import methods.server.OpenAccountMethod;
 import methods.server.OpenAdditionalAccountMethod;
 import methods.server.PayFromAccountMethod;
 import methods.server.ProvideAccessMethod;
 import methods.server.RevokeAccessMethod;
+import methods.server.SimulateTimeMethod;
 import methods.server.TransferMoneyMethod;
+import methods.server.UnblockCardMethod;
 
 public class DummyServer {
 
@@ -92,6 +100,10 @@ public class DummyServer {
             }
             case "invalidateCard": {
                 response = InvalidateCardMethod.parseRequest(reqIn);
+                break;
+            }
+            case "simulateTime": {
+                response = SimulateTimeMethod.parseRequest(reqIn);
                 break;
             }
             default:{

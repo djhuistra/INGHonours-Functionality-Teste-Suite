@@ -18,6 +18,7 @@ import methods.client.OpenAdditionalAccountMethod;
 import methods.client.PayFromAccountMethod;
 import methods.client.ProvideAccessMethod;
 import methods.client.RevokeAccessMethod;
+import methods.client.SimulateTimeMethod;
 import methods.client.TransferMoneyMethod;
 import methods.client.UnblockCardMethod;
 import methods.server.*;
@@ -283,6 +284,18 @@ public class BasicHappyFlowTestSuite {
         if((parsedResponse = checkResponse(response)) != null){
             PayFromAccountMethod.parseResponse(parsedResponse);
         }
+
+        // Extension 4 - Simulate Time
+        System.out.println("-- SimulateTime. No response expected --");
+
+        request = SimulateTimeMethod.createRequest(25);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            SimulateTimeMethod.parseResponse(parsedResponse);
+        }
+
+
 
 
         ///------ TEAR DOWN TESTS.
