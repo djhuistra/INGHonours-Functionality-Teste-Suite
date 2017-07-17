@@ -11,6 +11,7 @@ import methods.server.DepositIntoAccountMethod;
 import methods.server.GetAuthTokenMethod;
 import methods.server.GetBalanceMethod;
 import methods.server.GetBankAccountAccessMethod;
+import methods.server.GetDateMethod;
 import methods.server.GetTransactionsMethod;
 import methods.server.GetUserAccessMethod;
 import methods.server.InvalidateCardMethod;
@@ -104,6 +105,10 @@ public class DummyServer {
             }
             case "simulateTime": {
                 response = SimulateTimeMethod.parseRequest(reqIn);
+                break;
+            }
+            case "getDate": {
+                response = GetDateMethod.parseRequest(reqIn);
                 break;
             }
             default:{

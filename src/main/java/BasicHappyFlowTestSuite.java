@@ -299,6 +299,33 @@ public class BasicHappyFlowTestSuite {
 
 
         ///------ TEAR DOWN TESTS.
+
+        // First we progress time 2000 days. All cards should be expired.
+        System.out.println("-- SimulateTime 2000 days to make sure all cards are expired --");
+
+        request = SimulateTimeMethod.createRequest(2000);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            SimulateTimeMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- Attempt to use pincard after expiration date. Should Fail--");
+        card1.setPinCardNumber(newPinCard);
+
+        request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            PayFromAccountMethod.parseResponse(parsedResponse);
+        }
+
+
+
+
+
+        // TEAR DOWN TESTS PART 2
+
         // RevokeAccessMethod
         System.out.println("-- RevokeAccessMethod. Donald revokes Daisy's access--");
 

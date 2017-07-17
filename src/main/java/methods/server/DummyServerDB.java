@@ -47,16 +47,17 @@ public class DummyServerDB {
         return calendar;
     }
 
+    public Calendar getExpirationCalendar() {
+        Calendar cal = (Calendar) this.calendar.clone();
+        cal.add(Calendar.YEAR, 4);
+        return cal;
+    }
+
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
 
     public void addDay(){
         this.calendar.add(Calendar.DATE, 1);
-    }
-
-    public String calenderToString(){
-        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-         return format1.format(this.calendar.getTime());
     }
 }
