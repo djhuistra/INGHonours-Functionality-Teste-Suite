@@ -6,22 +6,25 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import methods.client.*;
 import methods.client.CloseAccountMethod;
+import methods.client.CloseSavingsAccountMethod;
 import methods.client.DepositIntoAccountMethod;
 import methods.client.GetAuthTokenMethod;
 import methods.client.GetBalanceMethod;
 import methods.client.GetBankAccountAccessMethod;
+import methods.client.GetOverdraftLimitMethod;
 import methods.client.GetTransactionsMethod;
 import methods.client.GetUserAccessMethod;
 import methods.client.InvalidateCardMethod;
 import methods.client.OpenAccountMethod;
 import methods.client.OpenAdditionalAccountMethod;
+import methods.client.OpenSavingsAccountMethod;
 import methods.client.PayFromAccountMethod;
 import methods.client.ProvideAccessMethod;
 import methods.client.RevokeAccessMethod;
+import methods.client.SetOverdraftLimitMethod;
 import methods.client.SimulateTimeMethod;
 import methods.client.TransferMoneyMethod;
 import methods.client.UnblockCardMethod;
-import methods.server.*;
 import models.AccountCardTuple;
 import models.BankAccount;
 import models.CustomerAccount;
@@ -286,7 +289,7 @@ public class BasicHappyFlowTestSuite {
         }
 
         // Extension 4 - Simulate Time
-        System.out.println("-- SimulateTime. No response expected --");
+        System.out.println("-- Extension 4: SimulateTime. No response expected --");
 
         request = SimulateTimeMethod.createRequest(25);
         response = client.processRequest(request);
@@ -296,7 +299,90 @@ public class BasicHappyFlowTestSuite {
         }
 
 
+        // Extension 5 - Overdrafting Limit
+        System.out.println("-- Extension 5: Overdrafting --");
+        System.out.println("-- SetOverdraftingLimit to 4000. Should work. --");
 
+        request = SetOverdraftLimitMethod.createRequest(customer2, bankAccount3, 4000f);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            SetOverdraftLimitMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- SetOverdraftingLimit to 10.000. Should Fail. Remain 4000 or goto 5000. --");
+
+        request = SetOverdraftLimitMethod.createRequest(customer2, bankAccount3, 10000f);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            SetOverdraftLimitMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- SetOverdraftingLimit to 10.000. Should Fail. Remain 4000 or goto 5000. --");
+
+        request = GetOverdraftLimitMethod.createRequest(customer2, bankAccount3, 10000f);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            GetOverdraftLimitMethod.parseResponse(parsedResponse);
+        }
+
+
+        System.out.println("-- Lower balance to -1000 --");
+
+        request = DepositIntoAccountMethod.createRequest(bankAccount3, card3, -800);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            DepositIntoAccountMethod.parseResponse(parsedResponse);
+        }
+
+
+        System.out.println("-- SimulateTime 366 days. Than check balance--");
+
+        request = SimulateTimeMethod.createRequest(366);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            SimulateTimeMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- Check balance after a year. Should be +/-1100 --");
+        // ObtainBalance
+        request = GetBalanceMethod.createRequest(customer2, bankAccount3);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            GetBalanceMethod.parseResponse(parsedResponse);
+        }
+
+        // Extension 5 - Overdrafting Limit
+        System.out.println("-- Extension 6: Savings Account --");
+        System.out.println("-- OpenSavingsAccount --");
+        request = OpenSavingsAccountMethod.createRequest(customer2, bankAccount3);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            OpenSavingsAccountMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- CloseSavingsAccount --");
+        request = CloseSavingsAccountMethod.createRequest(customer2, bankAccount3);
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            CloseSavingsAccountMethod.parseResponse(parsedResponse);
+        }
+
+        System.out.println("-- Extension 7: Logging --");
+        request = GetEventLogsMethod.createRequest("2017-7-17", "2017-8-17");
+        response = client.processRequest(request);
+
+        namedArrayResults = null;
+        if((namedArrayResults = checkArrayResponse(response)) != null){
+            GetTransactionsMethod.parseResponse(namedArrayResults);
+        }
 
         ///------ TEAR DOWN TESTS.
 
