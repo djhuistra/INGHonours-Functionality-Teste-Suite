@@ -154,9 +154,24 @@ public class BasicHappyFlowTestSuite {
             PayFromAccountMethod.parseResponse(parsedResponse);
         }
 
-
-
         // TransferMoney
+        System.out.println("-- TransferMoney. Daisy refunds Donald's hotdogs --");
+
+        request = TransferMoneyMethod.createRequest(bankAccount3, bankAccount1, customer2, (12.3), "Moniez");
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            TransferMoneyMethod.parseResponse(parsedResponse);
+        }
+        
+        // Extension 5 - Overdrafting
+        System.out.println("-- Extension 5: Overdrafting --");
+        System.out.println("-- Daisy wants to set her overdraft limit to 1000. --");
+
+        request = SetOverdraftLimitMethod.createRequest(customer2, bankAccount3, 1000f);
+        response = client.processRequest(request);
+
+        // TransferMoney 2
         System.out.println("-- TransferMoney. Daisy transfers to Donald --");
 
         request = TransferMoneyMethod.createRequest(bankAccount3, bankAccount1, customer2, 200, "Moniez");
@@ -338,9 +353,9 @@ public class BasicHappyFlowTestSuite {
         }
 
 
-        System.out.println("-- Lower balance to -1000 --");
+        System.out.println("-- Daisy wants bankruptcy. Lower balance to -1000. --");
 
-        request = DepositIntoAccountMethod.createRequest(bankAccount3, card3, -800);
+        request = TransferMoneyMethod.createRequest(bankAccount3, bankAccount1, customer2, 800, "More Moniez");
         response = client.processRequest(request);
 
         if((parsedResponse = checkResponse(response)) != null){
