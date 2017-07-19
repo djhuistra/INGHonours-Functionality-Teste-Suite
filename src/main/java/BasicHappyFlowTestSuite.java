@@ -206,7 +206,7 @@ public class BasicHappyFlowTestSuite {
 
 
         String pinCode = card1.getPinCode();
-        card1.setPinCode(pinCode+"1");
+        card1.setPinCode(getInvalidPin(pinCode));
 
         // Attempt 1
         request = PayFromAccountMethod.createRequest(bankAccount1, bankAccount3, card1, (12.3));
@@ -440,7 +440,24 @@ public class BasicHappyFlowTestSuite {
 
     }
 
-    public static Map<String, Object> checkResponse(JSONRPC2Response respIn){
+    private static String getInvalidPin(String pinCode) {
+		int numPIN = Integer.parseInt(pinCode);
+		if (numPIN == 9999) {
+			numPIN--;
+		} else {
+			numPIN++;
+		}
+		
+		String invalidPIN = Integer.toString(numPIN);
+		
+		if (invalidPIN.length() == 3) {
+			invalidPIN = invalidPIN.concat("0");
+		}
+		
+		return invalidPIN;
+	}
+
+	public static Map<String, Object> checkResponse(JSONRPC2Response respIn){
         Map<String, Object> namedResults = null;
 
         // Check for success or error
