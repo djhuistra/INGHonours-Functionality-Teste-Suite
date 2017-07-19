@@ -42,7 +42,7 @@ public class BasicHappyFlowTestSuite {
     public static void main(String[] args) {
 
         // Setup the Client here.
-        IClient client = new TestHttpClient();
+        IClient client = new DummyClient();
 
 //        IClient client = new SocketClient();
 
