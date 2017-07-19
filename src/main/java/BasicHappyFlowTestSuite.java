@@ -1,6 +1,8 @@
 import client.DummyClient;
 import client.IClient;
 import client.SocketClient;
+import client.TestHttpClient;
+
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Error;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
 import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
@@ -40,7 +42,7 @@ public class BasicHappyFlowTestSuite {
     public static void main(String[] args) {
 
         // Setup the Client here.
-        IClient client = new DummyClient();
+        IClient client = new TestHttpClient();
 
 //        IClient client = new SocketClient();
 
@@ -276,6 +278,16 @@ public class BasicHappyFlowTestSuite {
         if((parsedResponse = checkResponse(response)) != null){
             PayFromAccountMethod.parseResponse(parsedResponse);
         }
+        
+        // Get Daisy's balance back to 0
+        System.out.println("-- TransferMoney. Daisy buys baguettes --");
+
+        request = TransferMoneyMethod.createRequest(bankAccount3, bankAccount1, customer2, (12.3), "Baguettes");
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            TransferMoneyMethod.parseResponse(parsedResponse);
+        }
 
 
         System.out.println("-- Extension 3 - Invalidate Card --");
@@ -311,6 +323,16 @@ public class BasicHappyFlowTestSuite {
         if((parsedResponse = checkResponse(response)) != null){
             PayFromAccountMethod.parseResponse(parsedResponse);
         }
+        
+        // Get Daisy's balance back to 0
+        System.out.println("-- TransferMoney. Daisy buys milk --");
+
+        request = TransferMoneyMethod.createRequest(bankAccount3, bankAccount1, customer2, (12.3), "Milk");
+        response = client.processRequest(request);
+
+        if((parsedResponse = checkResponse(response)) != null){
+            TransferMoneyMethod.parseResponse(parsedResponse);
+        }
 
         // Extension 4 - Simulate Time
         System.out.println("-- Extension 4: SimulateTime. No response expected --");
@@ -342,16 +364,6 @@ public class BasicHappyFlowTestSuite {
         if((parsedResponse = checkResponse(response)) != null){
             SetOverdraftLimitMethod.parseResponse(parsedResponse);
         }
-
-        System.out.println("-- SetOverdraftingLimit to 10.000. Should Fail. Remain 4000 or goto 5000. --");
-
-        request = GetOverdraftLimitMethod.createRequest(customer2, bankAccount3, 10000f);
-        response = client.processRequest(request);
-
-        if((parsedResponse = checkResponse(response)) != null){
-            GetOverdraftLimitMethod.parseResponse(parsedResponse);
-        }
-
 
         System.out.println("-- Daisy wants bankruptcy. Lower balance to -1000. --");
 
